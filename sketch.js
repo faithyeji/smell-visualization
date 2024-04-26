@@ -524,6 +524,33 @@ dates.forEach((date) => {
   const dayBox = document.createElement("div");
   dayBox.classList.add("day-box");
   dayBox.classList.add("jetbrains-mono");
+  dayBox.addEventListener("click", function () {
+    showModal(date);
+  });
+  // show modal function
+  function showModal(date) {
+    const modal = document.getElementById("myModal");
+    const span = document.getElementsByClassName("close")[0];
+    const modalText = document.getElementById("modal-text");
+
+    modalText.textContent = JSON.stringify(
+      jsonData.filter((d) => d.date === date),
+      null,
+      2
+    ); // Pretty print JSON
+
+    modal.style.display = "flex";
+
+    span.onclick = function () {
+      modal.style.display = "none";
+    };
+
+    window.onclick = function (event) {
+      if (event.target === modal) {
+        modal.style.display = "none";
+      }
+    };
+  }
 
   const parentBox = document.createElement("div");
   parentBox.classList.add("parent-box");

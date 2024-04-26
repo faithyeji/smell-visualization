@@ -1,0 +1,146 @@
+<html>
+  <head>
+    <title>Radial Scatter Plot</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+      .circle {
+        fill: steelblue;
+      }
+      .background-circle {
+        fill: none;
+        stroke: grey;
+        stroke-width: 1px;
+        opacity: 0.5;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      const data = [
+        {
+          date: "2024-02-27",
+          time: "11:10:00",
+          name: "Raw onions",
+          type: "pungent",
+          intensity: "5",
+          connotation: "bad",
+        },
+        {
+          date: "2024-02-27",
+          time: "12:10:00",
+          name: "Village trees",
+          type: "decaying",
+          intensity: "4",
+          connotation: "bad",
+        },
+        {
+          date: "2024-02-27",
+          time: "13:50:00",
+          name: "Village trees",
+          type: "decaying",
+          intensity: "3",
+          connotation: "bad",
+        },
+        {
+          date: "2024-02-27",
+          time: "09:20:00",
+          name: "My perfume",
+          type: "fragrant",
+          intensity: "3",
+          connotation: "good",
+        },
+        {
+          date: "2024-02-27",
+          time: "09:40:00",
+          name: "Strawberry refresher",
+          type: "sweet",
+          intensity: "3",
+          connotation: "good",
+        },
+        {
+          date: "2024-02-27",
+          time: "15:30:00",
+          name: "Vanilla perfume",
+          type: "sweet",
+          intensity: "3",
+          connotation: "good",
+        },
+        {
+          date: "2024-02-27",
+          time: "11:30:00",
+          name: "Almond tea",
+          type: "sweet",
+          intensity: "3",
+          connotation: "good",
+        },
+        {
+          date: "2024-02-27",
+          time: "12:20:00",
+          name: "Fried chicken",
+          type: "savory/nutty",
+          intensity: "4",
+          connotation: "neutral",
+        },
+        {
+          date: "2024-02-27",
+          time: "12:40:00",
+          name: "Weed",
+          type: "pungent",
+          intensity: "4",
+          connotation: "neutral",
+        },
+      ];
+
+      const width = 500;
+      const height = 500;
+      const radius = Math.min(width, height) / 2 - 40;
+
+      const svg = d3
+        .select("body")
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .append("g")
+        .attr("transform", `translate(${width / 2}, ${height / 2})`);
+
+      svg.append("circle").attr("r", radius).attr("class", "background-circle");
+
+      const angleScale = d3
+        .scaleLinear()
+        .domain([0, 24])
+        .range([0, 2 * Math.PI]);
+
+      const circles = svg
+        .selectAll(".circle")
+        .data(data)
+        .enter()
+        .append("circle")
+        .attr("class", "circle")
+        .attr("r", 5)
+        .attr(
+          "cx",
+          (d) =>
+            radius *
+            Math.cos(
+              angleScale(
+                parseFloat(d.time.split(":")[0]) +
+                  parseFloat(d.time.split(":")[1]) / 60
+              ) -
+                Math.PI / 2 // rotating -90 degrees to get 00:00 on top
+            )
+        )
+        .attr(
+          "cy",
+          (d) =>
+            radius *
+            Math.sin(
+              angleScale(
+                parseFloat(d.time.split(":")[0]) +
+                  parseFloat(d.time.split(":")[1]) / 60
+              ) -
+                Math.PI / 2 // rotating -90 degrees to get 00:00 on top
+            )
+        );
+    </script>
+  </body>
+</html>
