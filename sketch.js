@@ -662,20 +662,46 @@ function createHorizontalPlot() {
     // Create a row for the circles
     const row = document.createElement("div");
     row.style.display = "flex"; // Horizontal layout
-    row.style.backgroundColor = "black";
     row.style.alignItems = "center";
     row.style.justifyContent = "start";
-    row.style.flexWrap = "wrap"; // Allows multiple lines if many circles
+    row.style.flexWrap = "no-wrap"; // Prevent wrapping to maintain timeline
     row.style.padding = "10px";
+    row.style.position = "relative"; // Needed for absolute positioning of circles
+    row.style.width = "60vw";
+    row.style.marginBottom = "30px";
 
     // Loop through items for this date and create circles
     items.forEach((item) => {
+      const timeOffset = calculateTimeOffset(item.time);
+
       const circle = document.createElement("div");
-      circle.style.width = `${item.intensity * 10}px`; // Size based on intensity
-      circle.style.height = `${item.intensity * 10}px`; // Size based on intensity
-      circle.style.borderRadius = "50%";
-      circle.style.backgroundColor = smellColors[item.type]; // Color based on type
+      circle.classList.add("circle-horiz");
+      circle.style.position = "absolute";
+      if (timeOffset < 10) {
+        circle.style.left = "1%";
+      } else {
+        circle.style.left = `${timeOffset}%`;
+      }
+      circle.style.width = `${item.intensity * 11}px`;
+      circle.style.height = `${item.intensity * 11}px`;
+      circle.style.backgroundColor = smellColors[item.type];
       circle.style.margin = "5px";
+
+      // Mouse events for hover
+      circle.addEventListener("mouseenter", () => {
+        document.getElementById("smellText").innerHTML = `
+          <strong>Date:</strong> ${item.date}<br>
+          <strong>Time:</strong> ${item.time}<br>
+          <strong>Name:</strong> ${item.name}<br>
+          <strong>Type:</strong> ${item.type}<br>
+          <strong>Intensity:</strong> ${item.intensity}<br>
+          <strong>Connotation:</strong> ${item.connotation}
+        `;
+      });
+      circle.addEventListener("mouseleave", () => {
+        document.getElementById("smellText").innerHTML = "";
+      });
+
       row.appendChild(circle);
     });
 
@@ -684,18 +710,38 @@ function createHorizontalPlot() {
   container.appendChild(dayBox);
 }
 
+function calculateTimeOffset(timeStr) {
+  const [hours, minutes, seconds] = timeStr.split(":").map(Number);
+  const totalSeconds = hours * 3600 + minutes * 60 + seconds;
+  return (totalSeconds / 86400) * 100; // Convert to percentage of the day
+}
+
 // toggle event listener
 toggle.addEventListener("click", () => {
   mode = mode === "circular" ? "horizontal" : "circular";
 
   container.innerHTML = ""; // clear existing
 
+  const smellDetailsDiv = document.getElementById("smellDetails");
+
   if (mode === "circular") {
     createCircularGradient();
+    smellDetailsDiv.style.display = "none"; // Hide details box in circular mode
+    document.getElementById("circularDescription").style.display = "block";
   } else {
     createHorizontalPlot();
+    smellDetailsDiv.style.display = "block"; // Show details box in horizontal mode
+    document.getElementById("circularDescription").style.display = "none";
   }
 });
 
-// initial visualization
-createCircularGradient();
+// initial call
+if (mode === "circular") {
+  createCircularGradient();
+  document.getElementById("smellDetails").style.display = "none";
+  document.getElementById("circularDescription").style.display = "block";
+} else {
+  createHorizontalPlot();
+  document.getElementById("smellDetails").style.display = "block";
+  document.getElementById("circularDescription").style.display = "none";
+}
