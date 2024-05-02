@@ -583,22 +583,6 @@ dates.forEach((date) => {
     })
     .join(", ");
 
-  // const gradientColors = Object.entries(smellCounts)
-  //   .map(([type, count]) => {
-  //     console.log(type);
-  //     const opacity =
-  //       Math.round((count / totalSmells) * opacityMultiplier * 100) / 100;
-  //     const color = smellColors[type];
-  //     const rgbaColor = `${color}${Math.floor(opacity * 255)
-  //       .toString(16)
-  //       .padStart(2, "0")}`;
-  //     console.log(rgbaColor);
-  //     return `linear-gradient(${
-  //       Math.random() * 360
-  //     }deg, ${rgbaColor}, rgba(0, 0, 0, 0) 70.71%)`;
-  //   })
-  //   .join(", ");
-
   gradientParent.style.background = gradientColors;
 
   parentBox.appendChild(gradientParent);

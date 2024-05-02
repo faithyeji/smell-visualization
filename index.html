@@ -8,16 +8,40 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="libre-caslon" id="header">Yeji's smell log</div>
     <div class="main-container">
       <!-- populated -->
       <div id="container"></div>
       <!-- key -->
       <div id="key">
-        <h1>LEGEND</h1>
-        color == type <br />
-        opacity == freq. of type <br /><br />
-        click in to see full view<br/ > (not implemented) <br /><br />
+        <div class="libre-caslon" id="header">yeji's smell log</div>
+        <!-- toggle -->
+
+        <div id="big-tog-container">
+          <div class="inner-container">
+            <div class="toggle">
+              <p>CIRCULAR</p>
+            </div>
+            <div class="toggle">
+              <p>GRADIENT</p>
+            </div>
+          </div>
+          <div class="inner-container" id="toggle-container">
+            <div class="toggle">
+              <p>CIRCULAR</p>
+            </div>
+            <div class="toggle">
+              <p>GRADIENT</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mono">
+          color == type <br />
+          opacity == freq. of type <br /><br />
+          click: full view<br/ > <br /><br />
+        </div>
+        <hr />
+        <br />
         <div class="color-box">
           <div class="color-circle" id="pungent"></div>
           <div class="key-text">pungent</div>
@@ -56,6 +80,7 @@
         </div>
       </div>
     </div>
+
     <!-- modal -->
     <div id="myModal" class="modal">
       <div class="modal-content">
@@ -65,5 +90,6 @@
     </div>
 
     <script src="sketch.js"></script>
+    <script src="toggle.js"></script>
   </body>
 </html>
