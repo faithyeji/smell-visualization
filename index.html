@@ -42,41 +42,44 @@
         </div>
         <hr />
         <br />
-        <div class="color-box">
-          <div class="color-circle" id="pungent"></div>
-          <div class="key-text">pungent</div>
-        </div>
-        <div class="color-box">
-          <div class="color-circle" id="citrus"></div>
-          <div class="key-text">citrus</div>
-        </div>
-        <div class="color-box">
-          <div class="color-circle" id="decaying"></div>
-          <div class="key-text">decaying</div>
-        </div>
-        <div class="color-box">
-          <div class="color-circle" id="fragrant"></div>
-          <div class="key-text">fragrant</div>
-        </div>
-        <div class="color-box">
-          <div class="color-circle" id="sweet"></div>
-          <div class="key-text">sweet</div>
-        </div>
-        <div class="color-box">
-          <div class="color-circle" id="woody_resinous"></div>
-          <div class="key-text">woody/resinous</div>
-        </div>
-        <div class="color-box">
-          <div class="color-circle" id="savory_nutty"></div>
-          <div class="key-text">savory/nutty</div>
-        </div>
-        <div class="color-box">
-          <div class="color-circle" id="minty"></div>
-          <div class="key-text">minty</div>
-        </div>
-        <div class="color-box">
-          <div class="color-circle" id="chemical"></div>
-          <div class="key-text">chemical</div>
+        <!-- color key -->
+        <div>
+          <div class="color-box">
+            <div class="color-circle" id="pungent"></div>
+            <div class="key-text">pungent</div>
+          </div>
+          <div class="color-box">
+            <div class="color-circle" id="citrus"></div>
+            <div class="key-text">citrus</div>
+          </div>
+          <div class="color-box">
+            <div class="color-circle" id="decaying"></div>
+            <div class="key-text">decaying</div>
+          </div>
+          <div class="color-box">
+            <div class="color-circle" id="fragrant"></div>
+            <div class="key-text">fragrant</div>
+          </div>
+          <div class="color-box">
+            <div class="color-circle" id="sweet"></div>
+            <div class="key-text">sweet</div>
+          </div>
+          <div class="color-box">
+            <div class="color-circle" id="woody_resinous"></div>
+            <div class="key-text">woody/resinous</div>
+          </div>
+          <div class="color-box">
+            <div class="color-circle" id="savory_nutty"></div>
+            <div class="key-text">savory/nutty</div>
+          </div>
+          <div class="color-box">
+            <div class="color-circle" id="minty"></div>
+            <div class="key-text">minty</div>
+          </div>
+          <div class="color-box">
+            <div class="color-circle" id="chemical"></div>
+            <div class="key-text">chemical</div>
+          </div>
         </div>
       </div>
     </div>
@@ -85,11 +88,13 @@
     <div id="myModal" class="modal">
       <div class="modal-content">
         <span class="close">&times;</span>
-        <pre id="modal-text"></pre>
+        <div class="flex">
+          <div id="modal-text"></div>
+          <div id="gradient-box"></div>
+        </div>
       </div>
     </div>
 
     <script src="sketch.js"></script>
-    <script src="toggle.js"></script>
   </body>
 </html>

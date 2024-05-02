@@ -504,7 +504,24 @@ const smellColors = {
   chemical: "#f8e65e", // yellow
 };
 
-// Collect unique smell types and frequency
+// toggle
+var toggle = document.getElementById("big-tog-container");
+var toggleContainer = document.getElementById("toggle-container");
+var toggleNumber;
+
+toggle.addEventListener("click", function () {
+  toggleNumber = !toggleNumber;
+  if (toggleNumber) {
+    toggleContainer.style.clipPath = "inset(0 0 0 50%)";
+    toggleContainer.style.backgroundColor = "grey";
+  } else {
+    toggleContainer.style.clipPath = "inset(0 50% 0 0)";
+    toggleContainer.style.backgroundColor = "black";
+  }
+  console.log(toggleNumber);
+});
+
+// collect unique smell types and frequency
 jsonData.forEach((item) => {
   smellTypes.add(item.type);
   if (!smellFrequency[item.date]) {
@@ -518,73 +535,162 @@ jsonData.forEach((item) => {
 
 const opacityMultiplier = 2;
 
-// Create day boxes and smell circles
-const dates = Object.keys(smellFrequency);
-dates.forEach((date) => {
-  const dayBox = document.createElement("div");
-  dayBox.classList.add("day-box");
-  dayBox.classList.add("jetbrains-mono");
-  dayBox.addEventListener("click", function () {
-    showModal(date);
-  });
-  // show modal function
-  function showModal(date) {
-    const modal = document.getElementById("myModal");
-    const span = document.getElementsByClassName("close")[0];
-    const modalText = document.getElementById("modal-text");
+// visualization
+let mode = "circular";
 
-    modalText.textContent = JSON.stringify(
-      jsonData.filter((d) => d.date === date),
-      null,
-      2
-    ); // Pretty print JSON
+// create day boxes and smell circles
+function createCircularGradient() {
+  const dates = Object.keys(smellFrequency);
+  dates.forEach((date) => {
+    const dayBox = document.createElement("div");
+    dayBox.classList.add("day-box");
+    dayBox.classList.add("jetbrains-mono");
+    dayBox.addEventListener("click", function () {
+      showModal(date);
+    });
 
-    modal.style.display = "flex";
+    // show modal function
+    function showModal(date) {
+      const modal = document.getElementById("myModal");
+      const span = document.getElementsByClassName("close")[0];
+      const modalText = document.getElementById("modal-text");
+      const gradientBox = document.getElementById("gradient-box"); // Ensure this ID matches your HTML
 
-    span.onclick = function () {
-      modal.style.display = "none";
-    };
+      const dayData = jsonData.filter((d) => d.date === date);
+      dayData.sort((a, b) => a.time.localeCompare(b.time));
 
-    window.onclick = function (event) {
-      if (event.target === modal) {
+      let modalContent = `<h2>${date} smells</h2>`;
+      dayData.forEach((smell) => {
+        modalContent += `<p><strong>Time:</strong> ${smell.time}<br><strong>Name:</strong> ${smell.name}<br><strong>Type:</strong> ${smell.type}<br><strong>Intensity:</strong> ${smell.intensity}<br><strong>Connotation:</strong> ${smell.connotation}</p>`;
+      });
+
+      modalText.innerHTML = modalContent;
+
+      // gradient calculation
+      const smellCounts = smellFrequency[date];
+      const maxSmellCount = Math.max(...Object.values(smellCounts));
+
+      const gradientColors = Object.entries(smellCounts)
+        .map(([type, count]) => {
+          const opacity =
+            count === maxSmellCount ? 1 : Math.pow(count / maxSmellCount, 2); // Exponential opacity scale
+          const color = smellColors[type];
+          const rgbaColor = `${color}${Math.floor(opacity * 255)
+            .toString(16)
+            .padStart(2, "0")}`;
+          return `linear-gradient(${
+            Math.random() * 360
+          }deg, ${rgbaColor}, rgba(0, 0, 0, 0) 70.71%)`;
+        })
+        .join(", ");
+
+      gradientBox.style.background = gradientColors;
+
+      // display modal
+      modal.style.display = "flex";
+
+      // x out
+      span.onclick = function () {
         modal.style.display = "none";
-      }
-    };
+      };
+
+      // close on click out
+      window.onclick = function (event) {
+        if (event.target === modal) {
+          modal.style.display = "none";
+        }
+      };
+    }
+
+    const parentBox = document.createElement("div");
+    parentBox.classList.add("parent-box");
+    dayBox.appendChild(parentBox);
+
+    const dateBox = document.createElement("div");
+    dateBox.textContent = date;
+    dateBox.classList.add("date-box");
+    parentBox.appendChild(dateBox);
+
+    const gradientParent = document.createElement("div");
+    gradientParent.setAttribute("id", "gradient");
+
+    const smellCounts = smellFrequency[date];
+    const totalSmells = Object.values(smellCounts).reduce((a, b) => a + b, 0);
+
+    const maxSmellCount = Math.max(...Object.values(smellCounts));
+
+    const gradientColors = Object.entries(smellCounts)
+      .map(([type, count]) => {
+        const opacity =
+          count === maxSmellCount ? 1 : Math.pow(count / maxSmellCount, 2); // Exponential opacity scale
+        const color = smellColors[type];
+        const rgbaColor = `${color}${Math.floor(opacity * 255)
+          .toString(16)
+          .padStart(2, "0")}`;
+        return `linear-gradient(${
+          Math.random() * 360
+        }deg, ${rgbaColor}, rgba(0, 0, 0, 0) 70.71%)`;
+      })
+      .join(", ");
+
+    gradientParent.style.background = gradientColors;
+
+    parentBox.appendChild(gradientParent);
+    container.appendChild(dayBox);
+  });
+}
+
+function createHorizontalPlot() {
+  // Clear existing visualization
+  container.innerHTML = "";
+
+  // Group data by date
+  const dataByDate = jsonData.reduce((acc, item) => {
+    if (!acc[item.date]) {
+      acc[item.date] = [];
+    }
+    acc[item.date].push(item);
+    return acc;
+  }, {});
+
+  // Create and append a row for each date
+  Object.entries(dataByDate).forEach(([date, items]) => {
+    // Create a row for the circles
+    const row = document.createElement("div");
+    row.style.display = "flex"; // Horizontal layout
+    row.style.backgroundColor = "black";
+    row.style.alignItems = "center";
+    row.style.justifyContent = "start";
+    row.style.flexWrap = "wrap"; // Allows multiple lines if many circles
+    row.style.padding = "10px";
+
+    // Loop through items for this date and create circles
+    items.forEach((item) => {
+      const circle = document.createElement("div");
+      circle.style.width = `${item.intensity * 4}px`; // Size based on intensity
+      circle.style.height = `${item.intensity * 4}px`; // Size based on intensity
+      circle.style.borderRadius = "50%";
+      circle.style.backgroundColor = smellColors[item.type]; // Color based on type
+      circle.style.margin = "5px";
+      row.appendChild(circle);
+    });
+
+    container.appendChild(row);
+  });
+}
+
+// toggle event listener
+toggle.addEventListener("click", () => {
+  mode = mode === "circular" ? "horizontal" : "circular";
+
+  container.innerHTML = ""; // clear existing
+
+  if (mode === "circular") {
+    createCircularGradient();
+  } else {
+    createHorizontalPlot();
   }
-
-  const parentBox = document.createElement("div");
-  parentBox.classList.add("parent-box");
-  dayBox.appendChild(parentBox);
-
-  const dateBox = document.createElement("div");
-  dateBox.textContent = date;
-  dateBox.classList.add("date-box");
-  parentBox.appendChild(dateBox);
-
-  const gradientParent = document.createElement("div");
-  gradientParent.setAttribute("id", "gradient");
-
-  const smellCounts = smellFrequency[date];
-  const totalSmells = Object.values(smellCounts).reduce((a, b) => a + b, 0);
-
-  const maxSmellCount = Math.max(...Object.values(smellCounts));
-
-  const gradientColors = Object.entries(smellCounts)
-    .map(([type, count]) => {
-      const opacity =
-        count === maxSmellCount ? 1 : Math.pow(count / maxSmellCount, 2); // Exponential opacity scale
-      const color = smellColors[type];
-      const rgbaColor = `${color}${Math.floor(opacity * 255)
-        .toString(16)
-        .padStart(2, "0")}`;
-      return `linear-gradient(${
-        Math.random() * 360
-      }deg, ${rgbaColor}, rgba(0, 0, 0, 0) 70.71%)`;
-    })
-    .join(", ");
-
-  gradientParent.style.background = gradientColors;
-
-  parentBox.appendChild(gradientParent);
-  container.appendChild(dayBox);
 });
+
+// initial visualization
+createCircularGradient();

@@ -26,6 +26,14 @@ body {
   color: rgb(160, 160, 160);
 }
 
+h2 {
+  font-family: "Libre Caslon Text", serif;
+}
+
+.flex {
+  display: flex;
+}
+
 #header {
   font-size: 24pt;
   margin-bottom: 5px;
@@ -33,6 +41,10 @@ body {
 
 .main-container {
   display: flex;
+}
+
+body::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
 }
 
 #container {
@@ -167,6 +179,10 @@ body {
   align-items: center;
 }
 
+.modal-content::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+
 /* Modal Content/Box */
 .modal-content {
   background-color: #f4f4f4;
@@ -176,9 +192,39 @@ body {
   height: 600px;
   position: relative;
   overflow: auto;
+  margin-left: 10px;
 }
 
-/* The Close Button */
+#modal-text {
+  width: 300px;
+  margin-left: 20px;
+}
+#modal-text p {
+  font-size: 10pt;
+  font-family: "Courier New", Courier, monospace;
+  font-style: normal;
+}
+#gradient-box {
+  width: 225px;
+  height: 600px;
+  margin-top: 55px;
+  background-color: blue;
+  border-radius: 5px;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0),
+    rgba(0, 0, 0, 1) 25%,
+    rgba(0, 0, 0, 1) 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0),
+    rgba(0, 0, 0, 1) 25%,
+    rgba(0, 0, 0, 1) 100%
+  );
+}
+
+/* close */
 .close {
   color: #aaa;
   float: right;
