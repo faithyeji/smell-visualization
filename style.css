@@ -127,13 +127,6 @@ body::-webkit-scrollbar {
   margin-left: 7px;
 }
 
-/* .smell-circle {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  margin: 2px;
-} */
-
 /* gradients */
 #gradient {
   height: 10rem;
@@ -304,4 +297,10 @@ a:hover {
 
 .toggle:nth-child(1) {
   right: 0;
+}
+
+.circle-box {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
 }

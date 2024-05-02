@@ -641,10 +641,10 @@ function createCircularGradient() {
 }
 
 function createHorizontalPlot() {
-  // Clear existing visualization
+  // clear existing
   container.innerHTML = "";
 
-  // Group data by date
+  // data group by date
   const dataByDate = jsonData.reduce((acc, item) => {
     if (!acc[item.date]) {
       acc[item.date] = [];
@@ -652,6 +652,10 @@ function createHorizontalPlot() {
     acc[item.date].push(item);
     return acc;
   }, {});
+
+  // flex col class box
+  const dayBox = document.createElement("div");
+  dayBox.classList.add("circle-box");
 
   // Create and append a row for each date
   Object.entries(dataByDate).forEach(([date, items]) => {
@@ -667,16 +671,17 @@ function createHorizontalPlot() {
     // Loop through items for this date and create circles
     items.forEach((item) => {
       const circle = document.createElement("div");
-      circle.style.width = `${item.intensity * 4}px`; // Size based on intensity
-      circle.style.height = `${item.intensity * 4}px`; // Size based on intensity
+      circle.style.width = `${item.intensity * 10}px`; // Size based on intensity
+      circle.style.height = `${item.intensity * 10}px`; // Size based on intensity
       circle.style.borderRadius = "50%";
       circle.style.backgroundColor = smellColors[item.type]; // Color based on type
       circle.style.margin = "5px";
       row.appendChild(circle);
     });
 
-    container.appendChild(row);
+    dayBox.appendChild(row);
   });
+  container.appendChild(dayBox);
 }
 
 // toggle event listener
